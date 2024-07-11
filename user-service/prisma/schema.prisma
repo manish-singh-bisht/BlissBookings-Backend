@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  HOST
+}
+
+//will contain other info related to user like profile photo,description etc
+model User {
+  id            String       @id
+  name          String
+  role          Role         @default(USER)
+  email         String       @unique
+  hosting_since DateTime?
+  description   Description?
+
+  @@index([email])
+}
+
+model Description {
+  id         String   @id @default(uuid())
+  text       String
+  languages  String[]
+  location   Location @relation(fields: [locationId], references: [id])
+  locationId String   @unique
+  pets       Boolean
+  job_title  String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String   @unique
+}
+
+//add all locations before hand-this is a look up table
+model Location {
+  id      String @id @default(uuid())
+  country String
+
+  Description Description? //not necessarily required in a lookup table
+}

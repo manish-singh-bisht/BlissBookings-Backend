@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Booking {
+  id              String        @id @default(uuid())
+  propertyId      String
+  startDate       DateTime
+  endDate         DateTime
+  customerId      String
+  hostId          String
+  status          BookingStatus
+  per_night_price Decimal
+  total_guests    Int
+  total_price     Decimal
+  orderIdGateway  String        @default(uuid()) //this is a temp orderId which is mimicing the orderId of payment.
+
+  @@index([propertyId])
+  @@index([status])
+  @@index([startDate, endDate])
+}
+
+enum BookingStatus {
+  PENDING
+  CANCELLED
+  COMPLETED
+  PAST
+}

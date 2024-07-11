@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Property {
+  id              String  @id @default(uuid())
+  name            String?
+  per_night_price Decimal
+  description     String
+  hostId          String
+  guests_num      Int
+  bed_num         Int
+  bedroom_num     Int
+  bathroom_num    Int
+  address_line_1  String
+  address_line_2  String?
+
+  location   Location @relation(fields: [locationId], references: [id])
+  locationId String
+
+  propertyType   PropertyType @relation(fields: [propertyTypeId], references: [id])
+  propertyTypeId String
+
+  @@index([locationId])
+  @@index([propertyTypeId])
+}
+
+//add all locations before hand-this is a look up table
+model Location {
+  id      String @id @default(uuid())
+  country String
+
+  Property Property[] //not necessarily required in a lookup table
+}
+
+//add all PropertyType before hand-this is a look up table
+model PropertyType {
+  id          String     @id @default(uuid())
+  name        String
+  description String
+  Property    Property[] //not necessarily required in a lookup table
+}
