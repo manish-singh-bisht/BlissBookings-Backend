@@ -91,4 +91,4 @@ Run this command in each service directory. This command should start the servic
 
 ## Contributing
 
-Close to any contribution as of now.
+Would love to see your contribution.
